@@ -1,0 +1,36 @@
+name: Postman Test
+
+on:
+  workflow_dispatch:  
+  push:
+    branches:
+      - main  
+
+jobs:
+  postman_tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+ 
+      - name: Install Node.js and Newman (globally)
+        uses: actions/setup-node@v3
+        with:
+          node-version: '21'
+ 
+      - name: Install Newman globally
+        run: npm install -g newman
+ 
+      - name: Install htmlextra-export reporter (globally)
+        run: npm install -g newman-reporter-htmlextra
+ 
+      - name: Run Postman tests (with increased verbosity)
+        run: newman run --verbose "Assignment1.postman_collection.json" -e "Postman Assignment 1.postman_environment.json" -r htmlextra --reporter-htmlextra-export testReport.html
+ 
+      - name: Upload Postman Test Report
+        if: always()  # Ensure reports are uploaded even if tests fail
+        uses: actions/upload-artifact@v3
+        with:
+          name: Postman_Test_Report
+          path: testReport.html
