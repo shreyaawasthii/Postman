@@ -1,0 +1,33 @@
+name: Postman Test
+
+on:
+  workflow_dispatch:  
+  push:
+    branches:
+      - main  
+
+jobs:
+  postman_tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run Postman tests
+        run: npx newman run Assignment1.postman_collection.json --environment=Postman Assignment 1.postman_environment.json
+
+      - name: Archive test results
+        uses: actions/upload-artifact@v2
+        with:
+          name: test-results
+          path: newman/results.txt  # Path to the directory containing test results
+
