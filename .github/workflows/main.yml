@@ -11,13 +11,16 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+      - name: Checkout Repository
+        uses: actions/checkout@v3
 
       - name: Install Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
-          node-version: '20'
+          node-version: '21'
+
+      - name: Install Newman
+        run: npm install -g newman
           
       - name: Print Current Directory
         run: pwd
@@ -28,7 +31,7 @@ jobs:
       - name: Run Postman tests
         run: |
           cd postman
-          npx newman run Assignment1.postman_collection.json --environment="Postman Assignment 1.postman_environment.json"
+          npx newman run --verbose "Assignment1.postman_collection.json" -e "Postman Assignment 1.postman_environment.json"
 
       - name: Archive test results
         uses: actions/upload-artifact@v2
